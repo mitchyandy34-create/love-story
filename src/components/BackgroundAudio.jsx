@@ -8,9 +8,9 @@ export default function BackgroundAudio() {
   const [blocked, setBlocked] = useState(false);
 
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    // enable inline playback on mobile and allow cross-origin fetching if necessary
+    // Use the HTMLAudioElement constructor to avoid any issues with a DOM <audio> tag
+    const audio = new Audio(bgAudio);
+    audioRef.current = audio;
     try {
       audio.playsInline = true;
       audio.crossOrigin = 'anonymous';
@@ -18,23 +18,20 @@ export default function BackgroundAudio() {
     audio.loop = true;
     audio.preload = 'auto';
 
-    const isChrome = typeof navigator !== 'undefined' && /Chrome/.test(navigator.userAgent) && !/Edg|OPR/.test(navigator.userAgent);
-
     const tryAutoplay = async () => {
       try {
-        // First try to play unmuted (best-effort)
         await audio.play();
         setPlaying(true);
         setBlocked(false);
         return;
       } catch (err) {
-        // If blocked, attempt muted autoplay (allowed by browsers)
+        // If blocked, attempt muted autoplay
         try {
           audio.muted = true;
           audio.volume = 0;
           await audio.play();
           setPlaying(true);
-          setBlocked(true); // still blocked for audible playback
+          setBlocked(true);
         } catch (err2) {
           console.warn('Autoplay completely blocked:', err2?.message || err2);
           setBlocked(true);
@@ -44,20 +41,12 @@ export default function BackgroundAudio() {
 
     tryAutoplay();
 
-    // On first real user interaction, unmute and fade in volume (best-effort workaround)
     const handleUserGesture = async () => {
       try {
         if (!audio) return;
-        // If audio is paused, try to play first
         if (audio.paused) {
-          try {
-            await audio.play();
-          } catch (e) {
-            // ignore
-          }
+          try { await audio.play(); } catch (e) {}
         }
-
-        // Unmute and fade volume in smoothly
         audio.muted = false;
         const target = 0.7;
         const stepMs = 50;
