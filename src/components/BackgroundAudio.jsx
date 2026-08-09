@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import bgAudio from '../assets/Indila_-_Love_Story__Official_Music_Video_(256k).mp3';
+// Use Vite's `?url` importer so the MP3 is emitted and referenced by URL at build time
+import bgAudio from '../assets/Indila_-_Love_Story__Official_Music_Video_(256k).mp3?url';
 
 export default function BackgroundAudio() {
   const audioRef = useRef(null);
