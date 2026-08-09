@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { CONFIG } from '../data/config';
+import profileImage from '../assets/mm1.jpeg';
 
 export default function Hero() {
   const heroRef = useRef(null);
@@ -65,7 +66,7 @@ export default function Hero() {
           }}
         >
           <img
-            src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400"
+            src={profileImage}
             alt="Her"
             style={{
               width: '100%',

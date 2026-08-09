@@ -176,7 +176,7 @@ export default function MediaAdmin() {
     try {
       // For new memories, require an uploaded image file
       if (!memoryForm.selectedId && !memoryForm.imageFile) {
-        setStatus('Please upload an image file before submitting.');
+        setMemoryStatus('Please upload an image file before submitting.');
         return;
       }
 
@@ -218,7 +218,7 @@ export default function MediaAdmin() {
     try {
       // For new videos, require an uploaded video file
       if (!videoForm.selectedId && !videoForm.videoFile) {
-        setStatus('Please upload a video file before submitting.');
+        setVideoStatus('Please upload a video file before submitting.');
         return;
       }
       let videoUrl = videoForm.videoUrl;
