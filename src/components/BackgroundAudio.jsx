@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import bgAudio from '../assets/background.mp3';
+import bgAudio from '../assets/Indila_-_Love_Story__Official_Music_Video_(256k).mp3';
 
 export default function BackgroundAudio() {
   const audioRef = useRef(null);
