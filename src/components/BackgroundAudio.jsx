@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 // Use Vite's `?url` importer so the MP3 is emitted and referenced by URL at build time
-import bgAudio from '../assets/Indila_-_Love_Story__Official_Music_Video_(256k).mp3?url';
+import bgAudio from '../assets/background.mp3?url';
 
 export default function BackgroundAudio() {
   const audioRef = useRef(null);
@@ -105,8 +105,6 @@ export default function BackgroundAudio() {
 
   return (
     <>
-      <audio ref={audioRef} src={bgAudio} />
-
       {blocked && (
         <div style={{ position: 'fixed', right: 18, bottom: 18, zIndex: 9999 }}>
           <button onClick={handleEnable} className="btn-primary" style={{ padding: '10px 14px' }}>
