@@ -17,13 +17,8 @@ export default function MusicPlayer() {
   const [volume, setVolume] = useState(0.7);
   const [showVisualizer, setShowVisualizer] = useState(false);
   const audioRef = useRef(null);
-  const progressInterval = useRef(null);
 
-  const {
-    data: songsData = [],
-    loading: songsLoading,
-    error: songsError,
-  } = useSupabaseData('songs', { orderBy: 'id' });
+  const { data: songsData = [] } = useSupabaseData('songs', { orderBy: 'id' });
 
   const filteredSongs = songsData.filter((s) => {
     if (!s.playlist) return false;
@@ -32,71 +27,85 @@ export default function MusicPlayer() {
   });
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-    }
-  }, [volume, currentSong]);
-
-  useEffect(() => {
     if (filteredSongs.length > 0 && !filteredSongs.some((song) => song.id === currentSong?.id)) {
       setCurrentSong(filteredSongs[0]);
-      setIsPlaying(false);
-      setProgress(0);
     }
-  }, [filteredSongs, currentSong]);
+  }, [filteredSongs]);
 
   useEffect(() => {
-    return () => {
-      if (progressInterval.current) clearInterval(progressInterval.current);
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleTimeUpdate = () => {
+      if (!audio.duration || isNaN(audio.duration)) return;
+      setProgress((audio.currentTime / audio.duration) * 100);
     };
-  }, []);
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setShowVisualizer(false);
+      const idx = filteredSongs.findIndex((s) => s.id === currentSong?.id);
+      if (idx >= 0) {
+        const next = filteredSongs[(idx + 1) % filteredSongs.length];
+        if (next) {
+          setCurrentSong(next);
+          setIsPlaying(true);
+        }
+      }
+    };
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, [currentSong, filteredSongs]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = volume;
+    if (currentSong?.audioUrl) {
+      audio.src = currentSong.audioUrl;
+    } else {
+      audio.removeAttribute('src');
+      audio.load();
+    }
+    if (isPlaying) {
+      audio.play().catch(() => {
+        setIsPlaying(false);
+      });
+      setShowVisualizer(true);
+    } else {
+      audio.pause();
+      setShowVisualizer(false);
+    }
+  }, [currentSong, isPlaying, volume]);
 
   const playSong = (song) => {
     if (currentSong?.id === song.id) {
-      togglePlay();
+      setIsPlaying((p) => !p);
       return;
     }
     setCurrentSong(song);
     setIsPlaying(true);
     setProgress(0);
-    setShowVisualizer(true);
-    
-    // Simulate progress since we don't have real audio files
-    if (progressInterval.current) clearInterval(progressInterval.current);
-    progressInterval.current = setInterval(() => {
-      setProgress((p) => {
-        if (p >= 100) {
-          clearInterval(progressInterval.current);
-          return 100;
-        }
-        return p + 0.5;
-      });
-    }, 100);
-  };
-
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying);
-    if (!isPlaying && progressInterval.current) {
-      progressInterval.current = setInterval(() => {
-        setProgress((p) => (p >= 100 ? 0 : p + 0.5));
-      }, 100);
-    } else {
-      clearInterval(progressInterval.current);
-    }
   };
 
   const playNext = () => {
     if (!currentSong) return;
     const idx = filteredSongs.findIndex((s) => s.id === currentSong.id);
     const next = filteredSongs[(idx + 1) % filteredSongs.length];
-    playSong(next);
+    if (next) playSong(next);
   };
 
   const playPrev = () => {
     if (!currentSong) return;
     const idx = filteredSongs.findIndex((s) => s.id === currentSong.id);
     const prev = filteredSongs[(idx - 1 + filteredSongs.length) % filteredSongs.length];
-    playSong(prev);
+    if (prev) playSong(prev);
   };
 
   return (
@@ -218,7 +227,7 @@ export default function MusicPlayer() {
                   ⏮
                 </button>
                 <button
-                  onClick={() => currentSong && togglePlay()}
+                  onClick={() => currentSong && setIsPlaying((p) => !p)}
                   style={{
                     width: '50px',
                     height: '50px',
@@ -334,6 +343,8 @@ export default function MusicPlayer() {
               </div>
             ))}
           </div>
+          {/* hidden audio element for playback */}
+          <audio ref={audioRef} style={{ display: 'none' }} />
         </div>
       </div>
     </section>

@@ -9,4 +9,30 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
-export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
+let supabaseClient;
+if (supabaseUrl && supabaseAnonKey) {
+  supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+} else {
+  const emptyResult = { data: [], error: null };
+  const makeQuery = () => {
+    const q = {
+      order: () => Promise.resolve(emptyResult),
+      then: (resolve) => resolve(emptyResult),
+      catch: () => Promise.resolve(emptyResult),
+    };
+    return q;
+  };
+
+  supabaseClient = {
+    from: () => ({
+      select: () => makeQuery(),
+    }),
+    auth: {
+      getUser: async () => ({ data: null, error: null }),
+      user: () => null,
+      signIn: async () => ({ data: null, error: new Error('Supabase not configured') }),
+    },
+  };
+}
+
+export const supabase = supabaseClient;

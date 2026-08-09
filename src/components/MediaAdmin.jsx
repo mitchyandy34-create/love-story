@@ -8,13 +8,17 @@ const storageBucket = 'media';
 async function uploadFileToStorage(file, folder) {
   if (!file) return null;
 
+  if (!supabase || !supabase.storage) {
+    throw new Error('Supabase storage is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.');
+  }
+
   const filePath = `${folder}/${Date.now()}_${file.name}`;
   const { error: uploadError } = await supabase.storage.from(storageBucket).upload(filePath, file);
   if (uploadError) {
     throw uploadError;
   }
 
-  const { data } = supabase.storage.from(storageBucket).getPublicUrl(filePath);
+  const { data } = await supabase.storage.from(storageBucket).getPublicUrl(filePath);
   return data?.publicUrl || null;
 }
 
