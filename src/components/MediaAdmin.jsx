@@ -64,7 +64,9 @@ export default function MediaAdmin() {
   const [songForm, setSongForm] = useState(initialSongForm);
   const [memoryForm, setMemoryForm] = useState(initialMemoryForm);
   const [videoForm, setVideoForm] = useState(initialVideoForm);
-  const [status, setStatus] = useState('');
+  const [songStatus, setSongStatus] = useState('');
+  const [memoryStatus, setMemoryStatus] = useState('');
+  const [videoStatus, setVideoStatus] = useState('');
 
   useEffect(() => {
     if (songForm.selectedId === null) return;
@@ -118,13 +120,15 @@ export default function MediaAdmin() {
   const clearVideoForm = () => setVideoForm(initialVideoForm);
 
   const handleSongSubmit = async (e) => {
-    e.preventDefault();
-    setStatus('Saving song...');
+    if (e && e.preventDefault) e.preventDefault();
+    setSongStatus('Saving song...');
+    setMemoryStatus('');
+    setVideoStatus('');
 
     try {
       // For new uploads, require an audio file to be provided
       if (!songForm.selectedId && !songForm.audioFile) {
-        setStatus('Please upload an audio file before submitting.');
+        setSongStatus('Please upload an audio file before submitting.');
         return;
       }
       let cover = songForm.coverUrl;
@@ -155,17 +159,19 @@ export default function MediaAdmin() {
       }
 
       if (error) throw error;
-      setStatus(`Song ${songForm.selectedId ? 'updated' : 'uploaded'} successfully.`);
+      setSongStatus(`Song ${songForm.selectedId ? 'updated' : 'uploaded'} successfully.`);
       clearSongForm();
       refreshSongs();
     } catch (err) {
-      setStatus(`Song error: ${err.message}`);
+      setSongStatus(`Song error: ${err.message}`);
     }
   };
 
   const handleMemorySubmit = async (e) => {
-    e.preventDefault();
-    setStatus('Saving memory image...');
+    if (e && e.preventDefault) e.preventDefault();
+    setMemoryStatus('Saving memory image...');
+    setSongStatus('');
+    setVideoStatus('');
 
     try {
       // For new memories, require an uploaded image file
@@ -195,17 +201,19 @@ export default function MediaAdmin() {
       }
 
       if (error) throw error;
-      setStatus(`Memory ${memoryForm.selectedId ? 'updated' : 'uploaded'} successfully.`);
+      setMemoryStatus(`Memory ${memoryForm.selectedId ? 'updated' : 'uploaded'} successfully.`);
       clearMemoryForm();
       refreshMemories();
     } catch (err) {
-      setStatus(`Memory error: ${err.message}`);
+      setMemoryStatus(`Memory error: ${err.message}`);
     }
   };
 
   const handleVideoSubmit = async (e) => {
-    e.preventDefault();
-    setStatus('Saving video...');
+    if (e && e.preventDefault) e.preventDefault();
+    setVideoStatus('Saving video...');
+    setSongStatus('');
+    setMemoryStatus('');
 
     try {
       // For new videos, require an uploaded video file
@@ -239,11 +247,11 @@ export default function MediaAdmin() {
       }
 
       if (error) throw error;
-      setStatus(`Video ${videoForm.selectedId ? 'updated' : 'uploaded'} successfully.`);
+      setVideoStatus(`Video ${videoForm.selectedId ? 'updated' : 'uploaded'} successfully.`);
       clearVideoForm();
       refreshVideos();
     } catch (err) {
-      setStatus(`Video error: ${err.message}`);
+      setVideoStatus(`Video error: ${err.message}`);
     }
   };
 
@@ -258,17 +266,16 @@ export default function MediaAdmin() {
           </p>
         </div>
 
-        {status && (
-          <div style={{ marginBottom: '30px', padding: '15px 20px', borderRadius: '16px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)' }}>
-            {status}
-          </div>
-        )}
-
         <div style={{ display: 'grid', gap: '40px' }}>
           <div>
             <h3 style={{ marginBottom: '20px' }}>Song Upload / Update</h3>
             <form onSubmit={handleSongSubmit}>
               <div style={{ display: 'grid', gap: '15px' }}>
+                {songStatus && (
+                  <div style={{ marginBottom: '20px', padding: '15px 20px', borderRadius: '16px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                    {songStatus}
+                  </div>
+                )}
                 <label>
                   Select Song to Edit
                   <select
@@ -374,6 +381,11 @@ export default function MediaAdmin() {
             <h3 style={{ marginBottom: '20px' }}>Memory Image Upload / Update</h3>
             <form onSubmit={handleMemorySubmit}>
               <div style={{ display: 'grid', gap: '15px' }}>
+                {memoryStatus && (
+                  <div style={{ marginBottom: '20px', padding: '15px 20px', borderRadius: '16px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                    {memoryStatus}
+                  </div>
+                )}
                 <label>
                   Select Memory to Edit
                   <select
@@ -458,6 +470,11 @@ export default function MediaAdmin() {
             <h3 style={{ marginBottom: '20px' }}>Video Upload / Update</h3>
             <form onSubmit={handleVideoSubmit}>
               <div style={{ display: 'grid', gap: '15px' }}>
+                {videoStatus && (
+                  <div style={{ marginBottom: '20px', padding: '15px 20px', borderRadius: '16px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                    {videoStatus}
+                  </div>
+                )}
                 <label>
                   Select Video to Edit
                   <select
