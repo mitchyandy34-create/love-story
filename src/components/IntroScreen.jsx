@@ -75,7 +75,7 @@ export default function IntroScreen({ onComplete }) {
               padding: '18px 40px',
             }}
           >
-            Enter My Heart ❤️
+            Welcome to this Realm
           </button>
         </div>
         
