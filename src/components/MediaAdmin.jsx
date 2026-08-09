@@ -122,6 +122,11 @@ export default function MediaAdmin() {
     setStatus('Saving song...');
 
     try {
+      // For new uploads, require an audio file to be provided
+      if (!songForm.selectedId && !songForm.audioFile) {
+        setStatus('Please upload an audio file before submitting.');
+        return;
+      }
       let cover = songForm.coverUrl;
       if (songForm.coverFile) {
         cover = await uploadFileToStorage(songForm.coverFile, 'songs/covers');
@@ -163,6 +168,12 @@ export default function MediaAdmin() {
     setStatus('Saving memory image...');
 
     try {
+      // For new memories, require an uploaded image file
+      if (!memoryForm.selectedId && !memoryForm.imageFile) {
+        setStatus('Please upload an image file before submitting.');
+        return;
+      }
+
       let src = memoryForm.srcUrl;
       if (memoryForm.imageFile) {
         src = await uploadFileToStorage(memoryForm.imageFile, 'memories/images');
@@ -197,6 +208,11 @@ export default function MediaAdmin() {
     setStatus('Saving video...');
 
     try {
+      // For new videos, require an uploaded video file
+      if (!videoForm.selectedId && !videoForm.videoFile) {
+        setStatus('Please upload a video file before submitting.');
+        return;
+      }
       let videoUrl = videoForm.videoUrl;
       if (videoForm.videoFile) {
         videoUrl = await uploadFileToStorage(videoForm.videoFile, 'videos/files');
@@ -298,16 +314,7 @@ export default function MediaAdmin() {
                   />
                 </label>
 
-                <div style={{ display: 'grid', gap: '15px', gridTemplateColumns: '1fr 1fr' }}>
-                  <label>
-                    Cover image URL
-                    <input
-                      value={songForm.coverUrl}
-                      onChange={(e) => setSongForm((prev) => ({ ...prev, coverUrl: e.target.value }))}
-                      placeholder="https://..."
-                      style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.03)', color: 'inherit' }}
-                    />
-                  </label>
+                <div style={{ display: 'grid', gap: '15px', gridTemplateColumns: '1fr' }}>
                   <label>
                     Cover file upload
                     <input
@@ -319,16 +326,7 @@ export default function MediaAdmin() {
                   </label>
                 </div>
 
-                <div style={{ display: 'grid', gap: '15px', gridTemplateColumns: '1fr 1fr' }}>
-                  <label>
-                    Audio URL
-                    <input
-                      value={songForm.audioUrl}
-                      onChange={(e) => setSongForm((prev) => ({ ...prev, audioUrl: e.target.value }))}
-                      placeholder="https://..."
-                      style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.03)', color: 'inherit' }}
-                    />
-                  </label>
+                <div style={{ display: 'grid', gap: '15px', gridTemplateColumns: '1fr' }}>
                   <label>
                     Audio file upload
                     <input
@@ -425,16 +423,6 @@ export default function MediaAdmin() {
                 </label>
 
                 <label>
-                  Image URL
-                  <input
-                    value={memoryForm.srcUrl}
-                    onChange={(e) => setMemoryForm((prev) => ({ ...prev, srcUrl: e.target.value }))}
-                    placeholder="https://..."
-                    style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.03)', color: 'inherit' }}
-                  />
-                </label>
-
-                <label>
                   Image file upload
                   <input
                     type="file"
@@ -506,32 +494,12 @@ export default function MediaAdmin() {
                 </div>
 
                 <label>
-                  Video URL
-                  <input
-                    value={videoForm.videoUrl}
-                    onChange={(e) => setVideoForm((prev) => ({ ...prev, videoUrl: e.target.value }))}
-                    placeholder="https://..."
-                    style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.03)', color: 'inherit' }}
-                  />
-                </label>
-
-                <label>
                   Video file upload
                   <input
                     type="file"
                     accept="video/*"
                     onChange={(e) => setVideoForm((prev) => ({ ...prev, videoFile: e.target.files?.[0] || null }))}
                     style={{ width: '100%' }}
-                  />
-                </label>
-
-                <label>
-                  Thumbnail URL
-                  <input
-                    value={videoForm.thumbnailUrl}
-                    onChange={(e) => setVideoForm((prev) => ({ ...prev, thumbnailUrl: e.target.value }))}
-                    placeholder="https://..."
-                    style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.03)', color: 'inherit' }}
                   />
                 </label>
 

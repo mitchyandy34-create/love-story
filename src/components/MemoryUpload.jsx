@@ -26,7 +26,6 @@ export default function MemoryUpload({ onUploaded }) {
   const [caption, setCaption] = useState('');
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
-  const [srcUrl, setSrcUrl] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [status, setStatus] = useState('');
 
@@ -35,15 +34,13 @@ export default function MemoryUpload({ onUploaded }) {
     setStatus('Uploading memory...');
 
     try {
-      let src = srcUrl;
-      if (imageFile) {
-        src = await uploadFileToStorage(imageFile, 'memories/images');
-      }
-
-      if (!src) {
-        setStatus('Please provide an image URL or upload a file.');
+      // Require an uploaded image file for quick, reliable uploads
+      if (!imageFile) {
+        setStatus('Please upload an image file before submitting.');
         return;
       }
+
+      const src = await uploadFileToStorage(imageFile, 'memories/images');
 
       const { error } = await supabase.from('memories').insert({
         category,
@@ -61,7 +58,6 @@ export default function MemoryUpload({ onUploaded }) {
       setCaption('');
       setDate('');
       setDescription('');
-      setSrcUrl('');
       setImageFile(null);
       setStatus('Memory added successfully.');
 
@@ -144,18 +140,7 @@ export default function MemoryUpload({ onUploaded }) {
 
           <div style={{ display: 'grid', gap: '18px' }}>
             <label>
-              Image URL
-              <input
-                type="url"
-                value={srcUrl}
-                onChange={(e) => setSrcUrl(e.target.value)}
-                placeholder="https://example.com/image.jpg"
-                style={{ width: '100%', padding: '14px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.03)', color: 'inherit' }}
-              />
-            </label>
-
-            <label>
-              or upload image file
+              Image file upload
               <input
                 type="file"
                 accept="image/*"
