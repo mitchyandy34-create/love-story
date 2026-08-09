@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import IntroScreen from './components/IntroScreen';
 import ParticleBackground from './components/ParticleBackground';
 import FloatingHearts from './components/FloatingHearts';
+import BackgroundAudio from './components/BackgroundAudio';
 import Home from './pages/Home';
 import Memories from './pages/Memories';
 import Music from './pages/Music';
@@ -36,6 +37,7 @@ export default function App() {
     <div style={{ position: 'relative', minHeight: '100vh' }}>
       <ParticleBackground />
       <FloatingHearts />
+      <BackgroundAudio />
       
       {!introComplete && <IntroScreen onComplete={handleIntroComplete} />}
       
