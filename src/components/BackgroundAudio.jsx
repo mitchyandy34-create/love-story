@@ -10,6 +10,11 @@ export default function BackgroundAudio() {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+    // enable inline playback on mobile and allow cross-origin fetching if necessary
+    try {
+      audio.playsInline = true;
+      audio.crossOrigin = 'anonymous';
+    } catch (e) {}
     audio.loop = true;
     audio.preload = 'auto';
 
@@ -75,10 +80,17 @@ export default function BackgroundAudio() {
     window.addEventListener('pointerdown', handleUserGesture, { once: true, passive: true });
     window.addEventListener('keydown', handleUserGesture, { once: true, passive: true });
 
+    const onPlayErr = (e) => console.debug('audio element error', e);
+    const onPlay = () => console.debug('audio play event');
+    audio.addEventListener('error', onPlayErr);
+    audio.addEventListener('play', onPlay);
+
     return () => {
       try {
         window.removeEventListener('pointerdown', handleUserGesture);
         window.removeEventListener('keydown', handleUserGesture);
+        audio.removeEventListener('error', onPlayErr);
+        audio.removeEventListener('play', onPlay);
         audio.pause();
         audio.src = '';
       } catch (e) {}
@@ -89,9 +101,10 @@ export default function BackgroundAudio() {
     const audio = audioRef.current;
     if (!audio) return;
     try {
-      await audio.play();
+      // Unmute and set volume before play to ensure audible playback on user gesture
       audio.muted = false;
       audio.volume = 0.7;
+      await audio.play();
       setPlaying(true);
       setBlocked(false);
     } catch (err) {
