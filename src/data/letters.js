@@ -10,10 +10,10 @@ When you miss me, close your eyes and breathe. I'm closer than you think. I'm in
 
 Missing someone is just proof that what you have is real. And what we have? It's the most real thing I've ever known.
 
-I'm counting down the moments until I can hold you again. Until then, keep this letter close to your heart — it's filled with all the love I have for you.
+I'm counting down the moments until I can hold you again. Until then, keep this letter close to your heart  it's filled with all the love I have for you.
 
 Forever yours,
-[Your Name]`,
+[Andy]`,
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ This feeling is temporary, but my love for you is permanent. Let yourself feel i
 I'm so proud of you. Always.
 
 With all my love,
-[Your Name]`,
+[Andy]`,
   },
   {
     id: 3,
@@ -42,20 +42,20 @@ With all my love,
 
 How much do I love you? Let me try to explain:
 
-I love you like the ocean loves the shore — constantly, deeply, and without end.
-I love you like the stars love the night sky — you make me shine brighter.
+I love you like the ocean loves the shore constantly, deeply, and without end.
+I love you like the stars love the night sky  you make me shine brighter.
 I love you in ways that words will never fully capture.
 
 I love your smile, your laugh, your mind, your heart.
 I love the way you care, the way you dream, the way you exist.
-I love you when you're happy, and I love you even more when you're not — because that's when you need it most.
+I love you when you're happy, and I love you even more when you're not  because that's when you need it most.
 
 I don't just love you. I choose you. Every single day. Over and over again. Without hesitation. Without doubt.
 
 You are my favorite person, my best friend, my home.
 
 Always and forever,
-[Your Name]`,
+[Andy]`,
   },
   {
     id: 4,
@@ -77,7 +77,7 @@ And through it all, I hope I'm right beside you.
 Happy Birthday, Beautiful. You deserve the world.
 
 All my love, always,
-[Your Name]`,
+[Andy]`,
   },
   {
     id: 5,
@@ -90,7 +90,7 @@ Why did I choose you? Because in a world of temporary things, you felt like fore
 
 I chose you because you make me want to be better. Not because you ask me to, but because being around you makes me want to rise to the occasion of deserving you.
 
-I chose you because you see me — the real me, the messy me, the still-learning me — and you choose me back.
+I chose you because you see me the real me, the messy me, the still-learning me  and you choose me back.
 
 I chose you because your laugh is my favorite sound, your voice is my favorite melody, and your heart is my favorite place.
 
@@ -99,7 +99,7 @@ I didn't just choose you once. I choose you every morning when I wake up and thi
 And if I had to choose again? I'd still choose you. Every single time.
 
 Yours completely,
-[Your Name]`,
+[Andy]`,
   },
   {
     id: 6,
@@ -124,7 +124,7 @@ You are incredible. You are loved. And this moment, no matter how hard it feels,
 Now go look in the mirror and tell yourself what I tell you every day: you are amazing.
 
 Love you to the moon and back,
-[Your Name]`,
+[Andy]`,
   },
 ];
 
